@@ -1,18 +1,45 @@
-from record_samples import record_to_file
+from record_samples import record
 import numpy as np
 import pyaudio
 import wave
 import time
-
 from pyAudioAnalysis import audioTrainTest as aT
+from pyAudioAnalysis import audioFeatureExtraction as aF
+
 chunk=1024
 isSignificant = 0.5 #try different values.
 
-def check_sample(path):
-    Result, P, classNames = aT.fileClassification(path, "svmModel", "svm")
+
+def check_sample(signal, Fs, mtWin, mtStep, stWin, stStep,Classifier, modelType):
+
+    # feature extraction:
+    [MidTermFeatures, s] = aF.mtFeatureExtraction(signal, Fs, mtWin * Fs, mtStep * Fs, round(Fs * stWin), round(Fs * stStep))
+    MidTermFeatures = MidTermFeatures.mean(axis=1)        # long term averaging of mid-term statistics
+    
+    if computeBEAT:
+        [beat, beatConf] = aF.beatExtraction(s, stStep)
+        MidTermFeatures = numpy.append(MidTermFeatures, beat)
+        MidTermFeatures = numpy.append(MidTermFeatures, beatConf)
+
+    # feature extraction:
+    [MidTermFeatures, s] = aF.mtFeatureExtraction(signal, Fs, mtWin * Fs, mtStep * Fs, round(Fs * stWin), round(Fs * stStep))
+    MidTermFeatures = MidTermFeatures.mean(axis=1)        # long term averaging of mid-term statistics
+    
+    if computeBEAT:
+        [beat, beatConf] = aF.beatExtraction(s, stStep)
+        MidTermFeatures = numpy.append(MidTermFeatures, beat)
+        MidTermFeatures = numpy.append(MidTermFeatures, beatConf)
+    curFV = (MidTermFeatures - MEAN) / STD                # normalization
+
+    [Result, P] = aT.classifierWrapper(Classifier, modelType, curFV)    # classification        
+                                                    
+    
     winner = np.argmax(P) #pick the result with the highest probability value.
     if P[winner] > isSignificant :
         return winner
+    
+
+    
 def play_sound( path):
 #open a wav format music  
     f = wave.open(path,"rb")  
@@ -39,13 +66,20 @@ def play_sound( path):
     p.terminate() 
 
 if __name__ == '__main__':
+    modelType = "svm"
+    modelName ="svmModel"
+    #   todo : hinzufuegen anderer clasifiere
+    #   load classifier: 
+    [Classifier, MEAN, STD, classNames, mtWin, mtStep, stWin, stStep, computeBEAT] = aT.loadSVModel(modelName)
     
+    Fs = 44100
     while True :
         
-        record_to_file('0.wav',10,24)               
-        
+        sample_width, signal = record(10,24)               
         t_start=time.time()
-        winner=check_sample("0.wav")
+        
+        winner = check_sample(signal, Fs, mtWin, mtStep, stWin, stStep,Classifier, modelType)
+        
         t_end = time.time()
         
         print("time for classifikation= " + str(t_end
@@ -55,11 +89,5 @@ if __name__ == '__main__':
         
 
 
-        if winner == 0:
-
-            play_sound("1.wav")
-
-        elif winner == 1:
-            play_sound("2.wav")
 
 
