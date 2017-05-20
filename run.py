@@ -2,6 +2,7 @@ from record_samples import record_to_file
 import numpy as np
 import pyaudio
 import wave
+import time
 
 from pyAudioAnalysis import audioTrainTest as aT
 chunk=1024
@@ -40,9 +41,19 @@ def play_sound( path):
 if __name__ == '__main__':
     
     while True :
-        record_to_file("/tmp/ram/0.wav",10,24) 
-        winner=check_sample("/tmp/ram/0.wav")
+        
+        record_to_file('0.wav',10,24)               
+        
+        t_start=time.time()
+        winner=check_sample("0.wav")
+        t_end = time.time()
+        
+        print("time for classifikation= " + str(t_end
+        -t_start))
+       
         print(winner)
+        
+
 
         if winner == 0:
 
