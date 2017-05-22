@@ -10,7 +10,7 @@ chunk=1024
 isSignificant = 0.5 #try different values.
 
 
-def check_sample(signal, Fs, mtWin, mtStep, stWin, stStep,Classifier, modelType):
+def check_sample(signal, Fs, mtWin, mtStep, stWin, stStep,Classifier, modelType, computeBEAT, MEAN, STD):
 
     # feature extraction:
     [MidTermFeatures, s] = aF.mtFeatureExtraction(signal, Fs, mtWin * Fs, mtStep * Fs, round(Fs * stWin), round(Fs * stStep))
@@ -78,7 +78,7 @@ if __name__ == '__main__':
         sample_width, signal = record(10,24)               
         t_start=time.time()
         
-        winner = check_sample(signal, Fs, mtWin, mtStep, stWin, stStep,Classifier, modelType)
+        winner = check_sample(signal, Fs, mtWin, mtStep, stWin, stStep,Classifier, modelType, computeBEAT, MEAN, STD)
         
         t_end = time.time()
         
