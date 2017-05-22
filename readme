@@ -1,9 +1,11 @@
 Anwendung:
-1. python record_sample 25 0 0 classname foldername
+1. python record_sample x 0 0 classname foldername
+  x ist die anzahl der aufnahmen pro klasse
   mindestens 2 klassen aufnehmen
-  legt die dateien in ordner ./filename/classname/0...25.wav
+  legt die dateien in ordner ./filename/classname/0...x.wav
 2. python createClassifierModel.py foldername
 3  python run.py
+  es muessen wav files entsprechend der anzahl von unterschiedlichen klassen vorhanden sein durchnummeriert beginnend mit 0.wav
 
 python autotest.py foldername 
   testet audio dateien, die ordnerstrucktur muss mit der obrigen uebereinstimmen. die test signale koennen analog zu eins aufgenommen werden
