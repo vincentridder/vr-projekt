@@ -29,7 +29,7 @@ for subdir in subdirs:
     print(subdir)
     for wav_path in os.listdir(subdir):
         num_files+=1
-        print("test "+wav_path+ ":")
+        print("test " + subdir + " " + wav_path+ ":")
         # load audio data
         Fs, x = aIO.readAudioFile(subdir+"/"+wav_path)
         t_s = time.time()
@@ -38,15 +38,17 @@ for subdir in subdirs:
 
         t_e = time.time()
         time_h= t_e - t_s
-        print("winner: " + str(classNames[winner]))
+        if winner == None:
+            print ("no match")
+        else:
+            print("winner: " + str(classNames[winner]))
+            if (subdir == dirname+ "/" +classNames[winner]):
+                num_right += 1.0
         print("time : "+ str(time_h))
         time_t +=time_h
-        if (subdir == dirname+ "/" +classNames[winner]):
-            num_right += 1.0
 
 print( "% richtig : " + str(num_right/ num_files))
 print( "avarage check time = " + str(time_t/num_files))
-print(end)
 
 
 
