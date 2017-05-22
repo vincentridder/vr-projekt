@@ -1,0 +1,10 @@
+Anwendung:
+1. python record_sample 25 0 0 classname foldername
+  mindestens 2 klassen aufnehmen
+  legt die dateien in ordner ./filename/classname/0...25.wav
+2. python createClassifierModel.py foldername
+3  python run.py
+
+python autotest.py foldername 
+  testet audio dateien, die ordnerstrucktur muss mit der obrigen uebereinstimmen. die test signale koennen analog zu eins aufgenommen werden
+  gibt prozentzahl richtig erkannter und durchnitliche erkennungs zeit.
