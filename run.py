@@ -7,7 +7,7 @@ from pyAudioAnalysis import audioTrainTest as aT
 from pyAudioAnalysis import audioFeatureExtraction as aF
 
 chunk=1024
-isSignificant = 0.5 #try different values.
+isSignificant = 0.4 #try different values.
 
 
 def check_sample(signal, Fs, mtWin, mtStep, stWin, stStep,Classifier, modelType, computeBEAT, MEAN, STD):
@@ -72,7 +72,7 @@ if __name__ == '__main__':
     #   load classifier: 
     [Classifier, MEAN, STD, classNames, mtWin, mtStep, stWin, stStep, computeBEAT] = aT.loadSVModel(modelName)
     
-    Fs = 44100
+    Fs = 44100/2
     while True :
         
         sample_width, signal = record(10,24)               
@@ -84,7 +84,8 @@ if __name__ == '__main__':
         
         print("time for classifikation= " + str(t_end
         -t_start))
-       
+        if winner is not None:
+            play_sound(str(winner) + ".wav")
         print(classNames[winner])
         
 
