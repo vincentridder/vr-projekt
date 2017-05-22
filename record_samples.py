@@ -10,7 +10,7 @@ import wave
 THRESHOLD = 500
 CHUNK_SIZE = 1024
 FORMAT = pyaudio.paInt16
-RATE = 44100
+RATE = 44100/2
 
 def is_silent(snd_data):
     "Returns 'True' if below the 'silent' threshold"
@@ -91,7 +91,7 @@ def record(number_of_chunks,len_trim_silence):
         elif not silent and not snd_started:
             snd_started = True
 
-        if (snd_started and num_silent > 30) : #or chunks == number_of_chunks :
+        if (snd_started and num_silent > 3) : #or chunks == number_of_chunks :
             break
         #if snd_started:
         #    chunks += 1 
@@ -101,9 +101,9 @@ def record(number_of_chunks,len_trim_silence):
     stream.close()
     p.terminate()
 
-    r = normalize(r)
-    r = trim(r)
-    r = add_silence(r, 0.5)#CHUNK_SIZE/RATE*len_trim_silence)
+    #r = normalize(r)
+    #r = trim(r)
+    #r = add_silence(r, 0.5)#CHUNK_SIZE/RATE*len_trim_silence)
     return sample_width, r
 
 def record_to_file(path, number_of_chunks,len_trim_silence):
@@ -121,13 +121,15 @@ def record_to_file(path, number_of_chunks,len_trim_silence):
 def record_multiple_samples_to_folder(path,number_of_samples,number_of_chunks,len_trim_silence):
     for i in range(number_of_samples):
         record_to_file(os.path.join(path,str(i) +".wav"), number_of_chunks,len_trim_silence)
+        print(i)
 
 if __name__ == '__main__':
     number_of_samples = int(argv[1])
     number_of_chunks = int(argv[2])
     len_trim_silence = int(argv[3])
     name = argv[4]
-    path = os.path.join(os.getcwd(),"testdata")
+    path = argv[5]
+    path = os.path.join(os.getcwd(),path)
     if not (os.path.exists(path)) :
         os.mkdir(path)
     path = os.path.join(path, name)
