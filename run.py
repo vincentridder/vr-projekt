@@ -85,7 +85,7 @@ if __name__ == '__main__':
         print("time for classifikation= " + str(t_end
         -t_start))
        
-        print(winner)
+        print(classNames[winner])
         
 
 
